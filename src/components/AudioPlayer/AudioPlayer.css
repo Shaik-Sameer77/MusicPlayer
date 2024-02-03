@@ -1,0 +1,23 @@
+/* AudioPlayer.css */
+audio {
+    width: 100%;
+    margin-top: 20px;
+    background: rgba(255, 255, 255, 0.1);
+    border-radius: 50px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    overflow: hidden;
+    backdrop-filter: blur(10px);
+  }
+  
+  @media screen and (max-width: 600px) {
+    audio {
+      width: calc(100% - 20px); /* Adjust as needed */
+    }
+    
+    @media screen and (max-width: 420px) {
+      audio {
+        width: calc(100% - 10px); /* Adjust as needed */
+      }
+    }
+  }
+  

@@ -1,11 +1,11 @@
 // AudioPlayer.jsx
 import React, { useState, useEffect } from "react";
-import "./AudioPlayer.css";
+import "./Card.css";
 import disk from "../../assets/disk.png";
 import { timer } from "../../utils/timer.js";
 import FileUpload from "../FileUpload/FileUpload.jsx";
 
-const AudioPlayer = ({
+const Card = ({
   setOpen,
   audioFiles,
   currentAudioIndex,
@@ -176,4 +176,4 @@ const AudioPlayer = ({
   );
 };
 
-export default AudioPlayer;
+export default Card;

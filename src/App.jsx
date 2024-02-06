@@ -1,6 +1,6 @@
 // App.jsx
 import React, { useState, useEffect, useRef } from "react";
-import AudioPlayer from "./components/AudioPlayer/AudioPlayer.jsx";
+import Card from "./components/AudioPlayer/Card.jsx";
 import FileUpload from "./components/FileUpload/FileUpload.jsx";
 import Playlist from "./components/Playlist/Playlist.jsx";
 
@@ -287,7 +287,7 @@ const App = () => {
       <div className="shape shape-2"></div>
       <div className="shape shape-3"></div>
       <main>
-        <h1>Audio Player</h1>
+        <h1>Music Myself</h1>
         {audioFiles.length === 0 ? (
           <div className="no-files"> 
           <FileUpload onAudioUpload={handleAudioUpload} />
@@ -297,7 +297,7 @@ const App = () => {
           
         ) : (
           <>
-            <AudioPlayer
+            <Card
               audioFiles={audioFiles}
               currentAudioIndex={currentAudioIndex}
               audioRef={audioRef}

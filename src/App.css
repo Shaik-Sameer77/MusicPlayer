@@ -1,24 +1,104 @@
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@200;300;400;500;600;700;800;900&display=swap');
+*{
+  padding: 0;
+  margin: 0;
+  box-sizing: border-box;
+  font-family: "Poppins",sans-serif;
+}
 
 body {
-  margin: 0;
-  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+ width: 100%;
+ min-height: 100vh;
+ color: #fff;
   display: flex;
   align-items: center;
   justify-content: center;
-  min-height: 100vh;
-  background: url('https://source.unsplash.com/1920x1080/?nature,water') no-repeat center center fixed;
+  background: url('./assets/bg-1.jpg') no-repeat center center fixed;
   background-size: cover;
 }
 
-.app-container {
-  background: rgba(255, 255, 255, 0.1);
+i{
+  cursor:pointer;
+  user-select: none;
+}
+
+ul{
+  list-style: none;
+}
+
+.container {
+  width: 360px;
   border-radius: 15px;
-  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  position: relative;
+}
+
+.shape {
+  width: 150px;
+  height: 150px;
+  position: absolute;
+  border-radius: 50%;
+}
+
+.shape-1{
+  background: radial-gradient(circle at 35px 65px, #9b22ea, #005 );
+  top:-65px;
+  left:-65px;
+}
+
+.shape-2{
+  background: radial-gradient(circle at 45px 90px, #ea22b1, #111 );
+  right:-65px;
+  bottom:-65px;
+}
+
+.shape-3{
+  width: 60px;
+  height: 60px;
+  background: #08e2ff;
+  right:7px;
+  top:10px;
+  filter: blur(20px);
+}
+
+main {
+  width: 360px;
+  border-radius: 15px;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  box-shadow: 0 0 20px rgba(7, 15, 15, 0.1);
   overflow: hidden;
-  backdrop-filter: blur(10px);
-  padding: 20px;
-  width: 100%;
+  position: relative;
+  backdrop-filter: blur(3px);
+}
+
+main h1{
+  margin-top: 15px;
   text-align: center;
+}
+
+.no-files{
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+
+input[type="range"]{
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  appearance: none;
+  background: #e5e5e5;
+  border-radius: 50px;
+}
+
+input[type="range"]::-webkit-slider-thumb{
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  appearance: none;
+  background: #4286f4;
+  border-radius: 50%;
+  cursor: grab;
+  width: 10px;
+  height: 10px;
 }
 
 h1 {
@@ -29,8 +109,8 @@ h1 {
 
 .no-files-message {
   color: #fff;
-  font-size: 18px;
-  margin: 20px 0;
+  font-size: 1.25rem;
+  margin-bottom: 15px;
 }
 
 @media screen and (max-width: 600px) {
@@ -41,10 +121,14 @@ h1 {
   h1 {
     font-size: 20px;
   }
+}
+
+@media screen and (max-width: 420px) {
+  .app-container{
+    width:280px
+  }
   
-  @media screen and (max-width: 420px) {
-    h1 {
-      font-size: 18px;
-    }
+  h1 {
+    font-size: 18px;
   }
 }

@@ -1,7 +1,8 @@
+// App.jsx
 import React, { useState, useEffect, useRef } from "react";
-import AudioPlayer from "./components/AudioPlayer/AudioPlayer";
-import FileUpload from "./components/FileUpload/FileUpload";
-import Playlist from "./components/Playlist/Playlist";
+import AudioPlayer from "./components/AudioPlayer/AudioPlayer.jsx";
+import FileUpload from "./components/FileUpload/FileUpload.jsx";
+import Playlist from "./components/Playlist/Playlist.jsx";
 
 import "./App.css";
 
@@ -10,6 +11,11 @@ const App = () => {
   const [currentAudioIndex, setCurrentAudioIndex] = useState(null);
   const [audioPositions, setAudioPositions] = useState({});
   const [prevPlaybackPosition, setPrevPlaybackPosition] = useState(0);
+  const [open, setOpen] = useState(false);
+  const [currentTime, setCurrentTime] = useState(0);
+  const [play, setPlay] = useState(false);
+  const [repeat,setRepeat] = useState("repeat");
+
   const audioRef = useRef();
 
   useEffect(() => {
@@ -98,11 +104,66 @@ const App = () => {
       transaction.oncomplete = () => {
         db.close();
       };
+      if(audioFiles.length===0) {
+        setPlay(true)
+      }
     };
 
     request.onerror = (event) => {
       console.error("Error opening IndexedDB:", event.error);
     };
+  };
+
+  const handleNextPrev = (n) => {
+    setCurrentAudioIndex((value) => {
+      if (n > 0) return value + n > audioFiles.length - 1 ? 0 : value + n;
+
+      return value + n < 0 ? audioFiles.length - 1 : value + n;
+    });
+
+    const nextIndex =
+      (currentAudioIndex + n + audioFiles.length) % audioFiles.length; // Ensure the index is within bounds
+
+    // Set playback position based on audioPositions, or start from 0 if not available
+    const fileName = audioFiles[nextIndex].name;
+    const newPosition =
+      audioPositions[fileName] !== undefined ? audioPositions[fileName] : 0;
+
+    // Set playback position and start playing
+    setPrevPlaybackPosition(newPosition);
+    setPlay(true);
+  };
+
+  const handleShuffle = () => {
+    const num = randomNumber();
+    const nextIndex = (currentAudioIndex + num + audioFiles.length) % audioFiles.length; // Ensure the index is within bounds
+  
+    // Set playback position based on audioPositions, or start from 0 if not available
+    const fileName = audioFiles[nextIndex].name;
+    const newPosition = audioPositions[fileName] !== undefined ? audioPositions[fileName] : 0;
+  
+    // Set playback position and start playing
+    setPrevPlaybackPosition(newPosition);
+    setCurrentAudioIndex(num);
+  };
+
+  const randomNumber = () => {
+    const number = Math.floor(Math.random() * (audioFiles.length - 1));
+    if (number === currentAudioIndex) {
+      return randomNumber();
+    }
+    return number;
+  };
+
+  const EndedAudio = () => {
+    switch (repeat) {
+      case "repeat_one":
+        return audioRef.current.play();
+      case "shuffle":
+        return handleShuffle();
+      default:
+        return handleNextPrev(1);
+    }
   };
 
   const handleAudioEnded = async () => {
@@ -121,7 +182,7 @@ const App = () => {
         playAudio(0);
       } else {
         // Move to the next audio in the playlist
-        setCurrentAudioIndex((prevIndex) => prevIndex + 1);
+        EndedAudio()
 
         // Set the playback position based on audioPositions, or start from 0 if not available
         const fileName = audioFiles[currentAudioIndex + 1].name;
@@ -179,6 +240,7 @@ const App = () => {
 
   const handleTimeUpdate = () => {
     setPrevPlaybackPosition(audioRef.current.currentTime);
+    setCurrentTime(audioRef.current.currentTime);
     setAudioPositions({
       ...audioPositions,
       [audioFiles[currentAudioIndex].name]: audioRef.current.currentTime,
@@ -220,25 +282,47 @@ const App = () => {
   }, [audioPositions, audioFiles]);
 
   return (
-    <div className="app-container">
-      <h1>Audio Player</h1>
-      <FileUpload onAudioUpload={handleAudioUpload} />
-      {audioFiles.length === 0 ? (
-        <p className="no-files-message">Upload audios to play</p>
-      ) : (
-        <>
-          <AudioPlayer
-            audioRef={audioRef}
-            onAudioEnded={handleAudioEnded}
-            onTimeUpdate={handleTimeUpdate}
-          />
-          <Playlist
-            audioFiles={audioFiles}
-            currentAudioIndex={currentAudioIndex}
-            onAudioClick={handleAudioClick}
-          />
-        </>
-      )}
+    <div className="container">
+      <div className="shape shape-1"></div>
+      <div className="shape shape-2"></div>
+      <div className="shape shape-3"></div>
+      <main>
+        <h1>Audio Player</h1>
+        {audioFiles.length === 0 ? (
+          <div className="no-files"> 
+          <FileUpload onAudioUpload={handleAudioUpload} />
+          <p className="no-files-message">
+            Upload audios to play</p>
+          </div>
+          
+        ) : (
+          <>
+            <AudioPlayer
+              audioFiles={audioFiles}
+              currentAudioIndex={currentAudioIndex}
+              audioRef={audioRef}
+              onAudioEnded={handleAudioEnded}
+              onTimeUpdate={handleTimeUpdate}
+              setOpen={setOpen}
+              currentTime={currentTime}
+              setCurrentTime={setCurrentTime}
+              handleNextPrev={handleNextPrev}
+              play={play}
+              setPlay={setPlay}
+              repeat={repeat}
+              setRepeat={setRepeat}
+              onAudioUpload={handleAudioUpload}
+            />
+            <Playlist
+              audioFiles={audioFiles}
+              currentAudioIndex={currentAudioIndex}
+              onAudioClick={handleAudioClick}
+              open={open}
+              setOpen={setOpen}
+            />
+          </>
+        )}
+      </main>
     </div>
   );
 };
